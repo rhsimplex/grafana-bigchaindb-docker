@@ -10,7 +10,6 @@ RUN apt-get update && \
     rm /tmp/grafana.deb && \
     curl -L https://github.com/tianon/gosu/releases/download/1.5/gosu-amd64 > /usr/sbin/gosu && \
     chmod +x /usr/sbin/gosu && \
-    apt-get remove -y curl && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
@@ -19,5 +18,7 @@ VOLUME ["/var/lib/grafana", "/var/log/grafana", "/etc/grafana"]
 EXPOSE 3000
 
 COPY ./run.sh /run.sh
+
+COPY ./bigchaindb_dashboard.js /usr/share/grafana/public/dashboards/
 
 ENTRYPOINT ["/run.sh"]
