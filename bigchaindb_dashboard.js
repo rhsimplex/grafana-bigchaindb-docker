@@ -22,10 +22,14 @@ const default_interval = '10s';
 const url = search_url + 'query?db=' + db + '&q=' + encodeURIComponent(query_measurements);
 
 var dashboard = {
-  rows : [],
+    rows : [],
+    title: 'BigchainDB Monitor',
+    time: {
+        from: 'now-5m',
+        to: 'now'
+    },
+    refresh: '5s'
 };
-
-dashboard.title = 'BigchainDB Monitor'
 
 $.ajax({
     url: url,
@@ -42,8 +46,11 @@ function create_layout(data) {
     var write_mean_columns = filter_columns('write_transaction', 'mean', data);
     var write_count_columns = filter_columns('write_transaction', 'count', data);
 
-    var block_mean_columns = filter_columns('write_block', 'mean', data);
-    var block_count_columns = filter_columns('write_block', 'count', data)
+    var block_validation_mean_columns = filter_columns('validate_block', 'mean', data);
+    var block_validation_count_columns = filter_columns('validate_block', 'count', data);
+
+    var block_write_mean_columns = filter_columns('write_block', 'mean', data);
+    var block_write_count_columns = filter_columns('write_block', 'count', data);
 
     dashboard.rows.push({
         title: 'Validate Transaction',
@@ -117,6 +124,40 @@ function create_layout(data) {
         ]
     });
 
+    dashboard.rows.push({
+        title: 'Validate Block',
+        height: '300px',
+        panels: [
+            {
+                id: 1,
+                title: 'Block Validation Time (ms)',
+                type: 'graph',
+                span: 6,
+                targets: block_validation_mean_columns.map((x) => {
+                    return {
+                        measurement: x,
+                        query: 'SELECT mean("value") FROM "' + x + '" GROUP BY time(' + default_interval + ') fill(null)'
+                    }
+                })
+            },
+            {
+                id: 2,
+                title: 'Block Validation Rate',
+                type: 'graph',
+                span: 6,
+                targets: block_validation_count_columns.map((x) => {
+                    return {
+                        measurement: x,
+                        target: 'SELECT mean("value") FROM "' + x + '" GROUP BY time(' + default_interval + ') fill(null)',
+                        dsType: 'influxdb',
+                        resultFormat: 'time_series',
+                        query: 'SELECT mean("value")/' + telegraf_flush_rate + ' FROM "' + x + '" WHERE $timeFilter GROUP BY time(' + default_interval + ') fill(null)',
+                        rawQuery: true
+                    }
+                })
+            }
+        ]
+    });
 
     dashboard.rows.push({
         title: 'Write Block',
@@ -127,7 +168,7 @@ function create_layout(data) {
                 title: 'Block Write Time (ms)',
                 type: 'graph',
                 span: 6,
-                targets: block_mean_columns.map((x) => {
+                targets: block_write_mean_columns.map((x) => {
                     return {
                         measurement: x,
                         query: 'SELECT mean("value") FROM "' + x + '" GROUP BY time(' + default_interval + ') fill(null)'
@@ -139,10 +180,14 @@ function create_layout(data) {
                 title: 'Block Write Rate',
                 type: 'graph',
                 span: 6,
-                targets: block_count_columns.map((x) => {
+                targets: block_write_count_columns.map((x) => {
                     return {
                         measurement: x,
-                        query: 'SELECT mean("value")/'  + telegraf_flush_rate + ' FROM "' + x + '" GROUP BY time(' + default_interval + ') fill(null)'
+                        target: 'SELECT mean("value") FROM "' + x + '" GROUP BY time(' + default_interval + ') fill(null)',
+                        dsType: 'influxdb',
+                        resultFormat: 'time_series',
+                        query: 'SELECT mean("value")/' + telegraf_flush_rate + ' FROM "' + x + '" WHERE $timeFilter GROUP BY time(' + default_interval + ') fill(null)',
+                        rawQuery: true
                     }
                 })
             }
