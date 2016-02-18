@@ -58,9 +58,13 @@ function create_layout(data) {
         panels: [
             {
                 id: 1,
-                title: 'Transaction Validation Time (ms)',
+                title: 'Transaction Validation Time',
                 type: 'graph',
+                fill: false,
+                stack: false,
                 span: 6,
+                legend: {show: false},
+                leftYAxisLabel: 'Validation time (ms)',
                 targets: validation_mean_columns.map((x) => {
                     return {
                         measurement: x,
@@ -74,7 +78,16 @@ function create_layout(data) {
                 id: 2,
                 title: 'Transaction Validation Rate',
                 type: 'graph',
+                fill: true,
+                stack: true,
                 span: 6,
+                legend: {show: false},
+                grid: {leftMin: 0},
+                leftYAxisLabel: 'Validations/s',
+                tooltip: {
+                    value_type: 'individual',
+                    shared: true
+                },
                 targets: validation_count_columns.map((x) => {
                     return {
                         measurement: x,
@@ -95,9 +108,13 @@ function create_layout(data) {
         panels: [
             {
                 id: 1,
-                title: 'Transaction Write Time (ms)',
+                title: 'Transaction Write Time',
                 type: 'graph',
+                fill: false,
+                stack: false,
                 span: 6,
+                legend: {show: false},
+                leftYAxisLabel: 'Write time (ms)',
                 targets: write_mean_columns.map((x) => {
                     return {
                         measurement: x,
@@ -109,7 +126,16 @@ function create_layout(data) {
                 id: 2,
                 title: 'Transaction Write Rate',
                 type: 'graph',
+                fill: true,
+                stack: true,
                 span: 6,
+                legend: {show: false},
+                grid: {leftMin: 0},
+                leftYAxisLabel: 'Writes/s',
+                tooltip: {
+                    value_type: 'individual',
+                    shared: true
+                },
                 targets: write_count_columns.map((x) => {
                     return {
                         measurement: x,
@@ -130,9 +156,13 @@ function create_layout(data) {
         panels: [
             {
                 id: 1,
-                title: 'Block Validation Time (ms)',
+                title: 'Block Validation Time',
                 type: 'graph',
+                fill: false,
+                stack: false,
                 span: 6,
+                legend: {show: false},
+                leftYAxisLabel: 'Validation time (ms)',
                 targets: block_validation_mean_columns.map((x) => {
                     return {
                         measurement: x,
@@ -144,7 +174,16 @@ function create_layout(data) {
                 id: 2,
                 title: 'Block Validation Rate',
                 type: 'graph',
+                fill: true,
+                stack: true,
                 span: 6,
+                legend: {show: false},
+                grid: {leftMin: 0},
+                leftYAxisLabel: 'Validations/s',
+                tooltip: {
+                    value_type: 'individual',
+                    shared: true
+                },
                 targets: block_validation_count_columns.map((x) => {
                     return {
                         measurement: x,
@@ -165,9 +204,13 @@ function create_layout(data) {
         panels: [
             {
                 id: 1,
-                title: 'Block Write Time (ms)',
+                title: 'Block Write Time',
                 type: 'graph',
+                fill: false,
+                stack: false,
                 span: 6,
+                legend: {show: false},
+                leftYAxisLabel: 'Write time (ms)',
                 targets: block_write_mean_columns.map((x) => {
                     return {
                         measurement: x,
@@ -179,7 +222,16 @@ function create_layout(data) {
                 id: 2,
                 title: 'Block Write Rate',
                 type: 'graph',
+                fill: true,
+                stack: true,
                 span: 6,
+                legend: {show: false},
+                grid: {leftMin: 0},
+                leftYAxisLabel: 'Writes/s',
+                tooltip: {
+                    value_type: 'individual',
+                    shared: true
+                },
                 targets: block_write_count_columns.map((x) => {
                     return {
                         measurement: x,
