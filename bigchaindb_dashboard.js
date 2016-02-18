@@ -52,6 +52,8 @@ function create_layout(data) {
     var block_write_mean_columns = filter_columns('write_block', 'mean', data);
     var block_write_count_columns = filter_columns('write_block', 'count', data);
 
+    var to_validate_queue = filter_columns('tx_queue', 'gauge', data);
+
     dashboard.rows.push({
         title: 'Validate Transaction',
         height: '300px',
@@ -239,6 +241,41 @@ function create_layout(data) {
                         dsType: 'influxdb',
                         resultFormat: 'time_series',
                         query: 'SELECT mean("value")/' + telegraf_flush_rate + ' FROM "' + x + '" WHERE $timeFilter GROUP BY time(' + default_interval + ') fill(null)',
+                        rawQuery: true
+                    }
+                })
+            }
+        ]
+    });
+
+    dashboard.rows.push({
+        title: 'Unvalidated Transaction Queue Size',
+        span: 12,
+        type: 'graph',
+        height: '300px',
+        panels: [
+            {
+                title: 'Unvalidated Transaction Queue Size',
+                span: 12,
+                type: 'graph',
+                lines: false,
+                fill: 1,
+                bars: true,
+                stack: true,
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    value_type: 'individual',
+                    shared: true
+                },
+                targets: to_validate_queue.map((x) => {
+                    return {
+                        measurement: x,
+                        target: 'SELECT mean("value") FROM "' + x + '" GROUP BY time(' + default_interval + ') fill(null)',
+                        dsType: 'influxdb',
+                        resultFormat: 'time_series',
+                        query: 'SELECT mean("value") FROM "' + x + '" WHERE $timeFilter GROUP BY time(' + default_interval + ') fill(null)',
                         rawQuery: true
                     }
                 })
