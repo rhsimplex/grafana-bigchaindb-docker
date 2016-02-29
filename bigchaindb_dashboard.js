@@ -265,6 +265,7 @@ function create_layout(data) {
                 legend: {
                     show: false
                 },
+                grid: {leftMin: 0},
                 tooltip: {
                     value_type: 'individual',
                     shared: true
