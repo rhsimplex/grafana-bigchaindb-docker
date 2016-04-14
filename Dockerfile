@@ -19,4 +19,6 @@ COPY ./run.sh /run.sh
 
 COPY ./bigchaindb_dashboard.js /usr/share/grafana/public/dashboards/
 
+ENV INFLUXDB_HOST **None**
+
 ENTRYPOINT ["/run.sh"]
