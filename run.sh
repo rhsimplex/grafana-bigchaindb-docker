@@ -16,7 +16,7 @@ connect_db() {
         echo "$(date) - waiting for Grafana to be ready"
         sleep 5
     done
-    curl 'http://admin:admin@localhost:3000/api/datasources' -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"name": "influx", "type": "influxdb","url": "http://localhost:8086", "access": "direct", "isDefault": true, "database": "telegraf", "user": "root", "password":"root"}'
+    curl 'http://admin:admin@localhost:3000/api/datasources' -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"name": "influx", "type": "influxdb","url": "http://'"${INFLUXDB_HOST}"':8086", "access": "proxy", "isDefault": true, "database": "telegraf", "user": "root", "password":"root"}'
 }
 
 connect_db &

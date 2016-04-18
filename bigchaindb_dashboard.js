@@ -12,14 +12,14 @@ const influxdb_port = '8086';
 
 const telegraf_flush_rate = '10';
 
-const search_url = 'http://' + influxdb_host + ':' + influxdb_port + '/';
+const search_url = 'http://' + window.document.location.host + '/';
 
 const db = 'telegraf';
 const query_measurements = 'SHOW MEASUREMENTS';
 const column_prefix = 'statsd';
 
 const default_interval = '10s';
-const url = search_url + 'query?db=' + db + '&q=' + encodeURIComponent(query_measurements);
+const url = search_url + 'api/datasources/proxy/1/query?db=' + db + '&q=' + encodeURIComponent(query_measurements);
 
 var dashboard = {
     rows : [],
